@@ -1,0 +1,17 @@
+.container-main {
+    max-width: 800px;
+    margin-top: 80px;
+}
+
+.responsive-container {
+    width: 80%;
+    margin: 5px auto;
+}
+
+img {
+    width: 100%;
+}
+
+p {
+    margin: 0;
+}

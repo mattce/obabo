@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obabo Generator</title>
+    <link rel="stylesheet" href="./css/bootstrap.css">
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+<div class="container-fluid container-main">
+    <!--div class="row">
+        <div class="col-xs-12 text-xs-center">
+            <h1>headline</h1>
+        </div>
+    </div-->
+    <div class="row">
+        <div class="col-xs-8 offset-xs-2">
+            <div class="responsive-container">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/President_Barack_Obama.jpg/1280px-President_Barack_Obama.jpg"
+                     alt="">
+            </div>
+        </div>
+    </div>
+    <form id="obabo_form" action="/">
+        <div class="row">
+            <div class="col-xs-8 offset-xs-2">
+                <div class="responsive-container">
+                    <h1 class="text-xs-center" id="obabo_output"></h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-8 offset-xs-2">
+                <div class="responsive-container">
+                    <input type="text" class="form-control text-xs-center" id="obabo_input" placeholder="Enter Text">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-8 offset-xs-2">
+                <div class="responsive-container">
+                    <button type="submit" class="btn btn-primary btn-block">Go!</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    (function () {
+
+        var form = document.getElementById('obabo_form');
+        var input = document.getElementById('obabo_input');
+        var output = document.getElementById('obabo_output');
+
+        var msg = new SpeechSynthesisUtterance();
+        var voices = window.speechSynthesis.getVoices();
+//            msg.voice = voices[1]; // Note: some voices don't support altering params
+        console.log(voices);
+        msg.voice = voices.filter(function(voice) { return voice.name == 'Princess'; })[0];
+        msg.voiceURI = 'native';
+        msg.volume = 1; // 0 to 1
+        msg.rate = 1; // 0.1 to 10
+        msg.pitch = 0; //0 to 2
+        msg.lang = 'en-US';
+
+
+        form.addEventListener('submit', onSubmit, false);
+
+        function onSubmit(event) {
+            event.preventDefault();
+            doMagic(input.value);
+        }
+
+        function doMagic(inputValue) {
+
+            var words = inputValue.trim().split(' ');
+            var outputText = '';
+
+            words.forEach(function (word) {
+                var output = word;
+                if (word.length > 2) {
+                    output = mirrorWord(word);
+                }
+                outputText += (output + ' ');
+            });
+
+            console.log(outputText);
+
+            displayOutput(outputText);
+
+            speak(outputText);
+
+        }
+
+        function mirrorWord(word) {
+
+            var isWordEven = !(word.length % 2);
+            var characters = word.split('');
+            var toBeMirrored = [];
+            var mirroredWord = '';
+
+            if (isWordEven) {
+                toBeMirrored = characters.slice(0, characters.length / 2);
+                mirroredWord = toBeMirrored.concat(toBeMirrored.slice().reverse()).join('');
+            } else {
+                toBeMirrored = characters.slice(0, Math.floor(characters.length / 2));
+                mirroredWord = characters.slice(0, Math.ceil(characters.length / 2)).concat(toBeMirrored.reverse()).join('');
+            }
+
+            console.log(mirroredWord);
+
+            return mirroredWord;
+
+        }
+
+        function displayOutput(outputText) {
+
+            output.textContent = outputText;
+
+        }
+
+        function speak(text) {
+
+            msg.text = text;
+
+            speechSynthesis.speak(msg);
+        }
+
+    })();
+</script>
+</body>
+</html>
